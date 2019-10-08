@@ -1,15 +1,16 @@
 import java.util.*;
 
-Stack<Rectangle> rects = new Stack();
+Queue<Rectangle> rects = new LinkedList();
 
 void setup(){
   size(550, 600); 
   
   background(255);
-  rects.push(new Rectangle(0, 0, 550, 600));
+  strokeWeight(4);
+  rects.add(new Rectangle(0, 0, 550, 600));
   
   while(!rects.isEmpty()){
-    rects.pop().develop();
+    rects.remove().develop();
   }
 }
 
@@ -21,12 +22,38 @@ class Rectangle{
      this.y1 = y1;
      this.x2 = x2;
      this.y2 = y2;     
+     
+    rect(x1, y1, x2, y2);     
    }
    
    void develop(){
-     //random chance of being split into two smaller rectangles by a line
-     //or of filling in a solid primary colour
-     //or nothing, a dead end
+     int action = int(random(5));
+     
+     //TODO: make it so first few layers have near 100% chance of splitting
+     //which then gets gradually but exponentially smaller as it goes on
+     //(Factor size of rectangle into probability?)
+     
+     //TODO: ensure minimum buffer space between nearest other line
+     
+     //TODO: make outermost borders offscreen so appears borderless 
+     //to stay true to the Mondrian look
+     
+     if(action<3){
+       //split into two smaller rectangles by a line
+       int direction = int(random(2));
+       if(direction==0){ 
+         float newX = x1 + random(x2-x1);  //split vertically
+         rects.add(new Rectangle(x1, y1, newX, y2));
+         rects.add(new Rectangle(newX, y1, x2, y2));
+       }else{
+         float newY = y1 + random(y2-y1);  //split horizontally
+         rects.add(new Rectangle(x1, y1, x2, newY));
+         rects.add(new Rectangle(x1, newY, x2, y2));
+
+       }
+     }else if(action==2){
+       //fill in a solid primary colour
+     } //or nothing, a dead end
    }
    
 }
