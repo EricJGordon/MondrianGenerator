@@ -28,28 +28,34 @@ class Rectangle{
    
    void develop(){
      int action = int(random(5));
+     float min = 10;
+     float xDiff = x2-x1, yDiff = y2-y1;
+     float buffer = 4;
      
-     //TODO: make it so first few layers have near 100% chance of splitting
+     //~~TODO: make it so first few layers have near 100% chance of splitting
      //which then gets gradually but exponentially smaller as it goes on
-     //(Factor size of rectangle into probability?)
+     //(Factor size of rectangle into probability?)~~
+     
+     //TODO: change rects to Priority Queue based on size(area), 
+     //then only develop x biggest Rectangles in queue
      
      //TODO: ensure minimum buffer space between nearest other line
      
      //TODO: make outermost borders offscreen so appears borderless 
      //to stay true to the Mondrian look
      
-     if(action<3){  //&& (xDiff>min || yDiff>min)  
+     if(action<3  && (xDiff>min || yDiff>min)){  
      //only one dimension needs to be bigger than min, 
-     //as long as we ensure thaat's the one that gets split
+     //as long as we ensure that's the one that gets split
      
        //split into two smaller rectangles
        int direction = int(random(2));
-       if(direction==0){  //&& xDiff>min 
-         float newX = x1 + random(x2-x1);  //split with vertical line
+       if(direction==0 && xDiff>min){   
+         float newX = x1 + random(buffer, xDiff-buffer);  //split with vertical line
          rects.add(new Rectangle(x1, y1, newX, y2));
          rects.add(new Rectangle(newX, y1, x2, y2));
        }else{
-         float newY = y1 + random(y2-y1);  //split with horizontal line
+         float newY = y1 + random(buffer, yDiff-buffer);  //split with horizontal line
          rects.add(new Rectangle(x1, y1, x2, newY));
          rects.add(new Rectangle(x1, newY, x2, y2));
 
