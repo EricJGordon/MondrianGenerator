@@ -1,18 +1,15 @@
 import java.util.*;
+int i, r;
 
 PriorityQueue<Rectangle> rects = new PriorityQueue();
 
 void setup(){
   size(550, 600); 
-  
   background(255);
   strokeWeight(4);
   rects.add(new Rectangle(0, 0, 550, 600));
-  
-  for(int i=0; i<15 && !rects.isEmpty(); i++){
-    rects.poll().develop();
-
-  }
+  i = 0;
+  r = 0;
 }
 
 class Rectangle implements Comparable<Rectangle>{
@@ -24,7 +21,8 @@ class Rectangle implements Comparable<Rectangle>{
      this.y1 = y1;
      this.x2 = x2;
      this.y2 = y2;     
-     
+    
+    fill(12*r++, 230, 0);
     rect(x1, y1, x2, y2);   
     height = y2-y1;
     width = x2-x1;
@@ -47,14 +45,16 @@ class Rectangle implements Comparable<Rectangle>{
    void develop(){
      int action = int(random(9));
      float min = 20;    //no longer needed?
-     float buffer = 8;  //ditto
+     float buffer = 8;  //ditto?
      
      //TODO: make outermost borders offscreen so appears borderless 
      //to stay true to the Mondrian look
      
-     if(action<9  && (width>min || height>min)){  
      //only one dimension needs to be bigger than min, 
      //as long as we ensure that's the one that gets split
+     if(action<9  && (width>min || height>min)){  //([current])||rects.size()<5
+     //||size bit to ensure first few get developed and so there's no longer a small
+     //chance of stalling right at the start
      
        //split into two smaller rectangles
        int direction = int(random(2));
@@ -72,13 +72,15 @@ class Rectangle implements Comparable<Rectangle>{
        //fill in a random solid primary colour
        /*fill(150, 0, 0);
        rect(x1, y1, x2, y2);   
-       fill(255);*/
-       
-       //for testing purposes move rects.poll().develop() to a draw(), add delay(),
-       //and fill each rectangle a progressively different shade as it goes on?
-       //Might also help to print out area of current rect to console
-       
+       fill(255);*/       
      } //or nothing, a dead end
    }
-   
+}
+void draw(){
+
+  if(i++<18 && !rects.isEmpty()){
+    rects.poll().develop();
+    delay(500);
+  }
+         //Might also help to print out area of current rect to console
 }
