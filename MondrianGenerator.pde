@@ -1,5 +1,5 @@
 import java.util.*;
-int i, r;
+int i;
 
 PriorityQueue<Rectangle> rects = new PriorityQueue();
 
@@ -9,7 +9,6 @@ void setup(){
   strokeWeight(4);
   rects.add(new Rectangle(0, 0, 550, 600));
   i = 0;
-  r = 0;
 }
 
 class Rectangle implements Comparable<Rectangle>{
@@ -22,7 +21,20 @@ class Rectangle implements Comparable<Rectangle>{
      height = h;   
      area = height * width;
     
-     //fill(30*r++, 230, 0);
+     int[] colours = new int[4];
+      colours[0] = #d10a0f;  //red  
+      colours[1] = #3d487e;  //blue  
+      colours[2] = #fcd202;  //yellow
+      colours[3] = #000000;  //black
+      
+      
+     int r= int(random(15));
+     int colour = (r<4? colours[r]: #ffffff);
+     
+     //TODO: Favour colours that haven't been picked yet i.e. choose yellow once before red for a second time
+     //TODO: Make sure two black rectangles don't border each other?
+     
+     fill(colour);
      rect(x, y, width, height);   
    }
    
@@ -39,8 +51,7 @@ class Rectangle implements Comparable<Rectangle>{
      return result;
    }
    
-   void develop(){
-     int action = int(random(9));
+   void split(){
      float min = 20;    //no longer needed?
      float buffer = 8;  //ditto?
      
@@ -49,11 +60,9 @@ class Rectangle implements Comparable<Rectangle>{
      
      //only one dimension needs to be bigger than min, 
      //as long as we ensure that's the one that gets split
-     if(action<9  && (width>min || height>min)){  //([current])||rects.size()<5
+     if(width>min || height>min){  //([current])||rects.size()<5
      //||size bit to ensure first few get developed and so there's no longer a small
      //chance of stalling right at the start
-     /*print("\n\nCurrent Rectangle: \nx1 =" + round(x1) + "\ny1 = " + 
-     round(y1) + "\nx2 = " + round(x2) + "\ny2 = " + round(y2));*/
      
        //split into two smaller rectangles
        int direction = int(random(2));
@@ -61,33 +70,18 @@ class Rectangle implements Comparable<Rectangle>{
          float xOffset = random(buffer, width-buffer);  //split with vertical line
          rects.add(new Rectangle(x, y, xOffset, height));
          rects.add(new Rectangle(x+xOffset, y, width-xOffset, height));
-         /*print("\n\nSplits into a: \nx1 =" + round(x1) + "\ny1 = " + 
-         round(y1) + "\nx2 = " + round(xOffset) + "\ny2 = " + round(y2) + 
-         "\nand b: \nx1 =" + round(xOffset) + "\ny1 = " + 
-         round(y1) + "\nx2 = " + round(x2) + "\ny2 = " + round(y2));*/
        }else{
          float yOffset = random(buffer, height-buffer);  //split with horizontal line
          rects.add(new Rectangle(x, y, width, yOffset));
          rects.add(new Rectangle(x, y+yOffset, width, height-yOffset));
-         
-         /*print("\n\nSplits into a: \nx1 =" + round(x1) + "\ny1 = " + 
-         round(y1) + "\nx2 = " + round(x2) + "\ny2 = " + round(yOffset) + 
-         "\nand b: \nx1 =" + round(x1) + "\ny1 = " + 
-         round(yOffset) + "\nx2 = " + round(x2) + "\ny2 = " + round(y2));*/
-
        }
-     }else if(action==9){
-       //fill in a random solid primary colour
-       /*fill(150, 0, 0);
-       rect(x1, y1, x2, y2);   
-       fill(255);*/       
-     } //or nothing, a dead end
+     }
    }
 }
 void draw(){
 
-  if(i++<10 && !rects.isEmpty()){
-    rects.poll().develop();
-    delay(700);
+  if(i++<15 && !rects.isEmpty()){
+    rects.poll().split();
+    delay(400);
   }
 }
