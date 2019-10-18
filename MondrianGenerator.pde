@@ -13,20 +13,17 @@ void setup(){
 }
 
 class Rectangle implements Comparable<Rectangle>{
-  float x1, x2, y1, y2;
-  float height, width, area;
+  float x, y, width, height, area;
   
-   Rectangle(float x1, float y1, float x2, float y2){
-     this.x1 = x1;
-     this.y1 = y1;
-     this.x2 = x2;
-     this.y2 = y2;     
+   Rectangle(float x, float y, float w, float h){
+     this.x = x;
+     this.y = y;
+     width = w;
+     height = h;   
+     area = height * width;
     
-    fill(30*r++, 230, 0);
-    rect(x1, y1, x2, y2);   
-    height = y2-y1;
-    width = x2-x1;
-    area = height * width;
+     //fill(30*r++, 230, 0);
+     rect(x, y, width, height);   
    }
    
    @Override
@@ -55,28 +52,28 @@ class Rectangle implements Comparable<Rectangle>{
      if(action<9  && (width>min || height>min)){  //([current])||rects.size()<5
      //||size bit to ensure first few get developed and so there's no longer a small
      //chance of stalling right at the start
-     print("\n\nCurrent Rectangle: \nx1 =" + round(x1) + "\ny1 = " + 
-     round(y1) + "\nx2 = " + round(x2) + "\ny2 = " + round(y2));
+     /*print("\n\nCurrent Rectangle: \nx1 =" + round(x1) + "\ny1 = " + 
+     round(y1) + "\nx2 = " + round(x2) + "\ny2 = " + round(y2));*/
      
        //split into two smaller rectangles
        int direction = int(random(2));
        if(direction==0 && width>min){   
          float xOffset = random(buffer, width-buffer);  //split with vertical line
-         rects.add(new Rectangle(x1, y1, xOffset, y2));
-         rects.add(new Rectangle(x1+xOffset, y1, x2-xOffset, y2));
-         print("\n\nSplits into a: \nx1 =" + round(x1) + "\ny1 = " + 
+         rects.add(new Rectangle(x, y, xOffset, height));
+         rects.add(new Rectangle(x+xOffset, y, width-xOffset, height));
+         /*print("\n\nSplits into a: \nx1 =" + round(x1) + "\ny1 = " + 
          round(y1) + "\nx2 = " + round(xOffset) + "\ny2 = " + round(y2) + 
          "\nand b: \nx1 =" + round(xOffset) + "\ny1 = " + 
-         round(y1) + "\nx2 = " + round(x2) + "\ny2 = " + round(y2));
+         round(y1) + "\nx2 = " + round(x2) + "\ny2 = " + round(y2));*/
        }else{
          float yOffset = random(buffer, height-buffer);  //split with horizontal line
-         rects.add(new Rectangle(x1, y1, x2, yOffset));
-         rects.add(new Rectangle(x1, y1+yOffset, x2, y2-yOffset));
+         rects.add(new Rectangle(x, y, width, yOffset));
+         rects.add(new Rectangle(x, y+yOffset, width, height-yOffset));
          
-         print("\n\nSplits into a: \nx1 =" + round(x1) + "\ny1 = " + 
+         /*print("\n\nSplits into a: \nx1 =" + round(x1) + "\ny1 = " + 
          round(y1) + "\nx2 = " + round(x2) + "\ny2 = " + round(yOffset) + 
          "\nand b: \nx1 =" + round(x1) + "\ny1 = " + 
-         round(yOffset) + "\nx2 = " + round(x2) + "\ny2 = " + round(y2));
+         round(yOffset) + "\nx2 = " + round(x2) + "\ny2 = " + round(y2));*/
 
        }
      }else if(action==9){
@@ -93,5 +90,4 @@ void draw(){
     rects.poll().develop();
     delay(700);
   }
-         //Might also help to print out area of current rect to console
 }
