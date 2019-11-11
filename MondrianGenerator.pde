@@ -50,17 +50,15 @@ class Rectangle implements Comparable<Rectangle>{
    }
    
    void split(){
-     float min = 20;    //no longer needed?
-     float buffer = 8;  //ditto?
+     float min = 42;    
+     float buffer = 20;  
      
      //TODO: make outermost borders offscreen so appears borderless 
      //to stay true to the Mondrian look
      
      //only one dimension needs to be bigger than min, 
      //as long as we ensure that's the one that gets split
-     if(width>min || height>min){  //([current])||rects.size()<5
-     //||size bit to ensure first few get developed and so there's no longer a small
-     //chance of stalling right at the start
+     if(width>min || height>min){  
      
      toColour.remove(this);
        //split into two smaller rectangles
@@ -86,24 +84,31 @@ class Rectangle implements Comparable<Rectangle>{
    }
 }
 void draw(){
+  int rand1 = int(random(2));
+  int rand2 = int(random(3));
+  int[][] colours = new int[4][2];
+      colours[0][0] = #d10a0f;  //red  
+      colours[0][1] = 2 + rand1;
+      colours[1][0] = #3d487e;  //blue  
+      colours[1][1] = 5 - colours[0][1];
+      colours[2][0] = #fcd202;  //yellow
+      colours[2][1] = 2;
+      colours[3][0] = #000000;  //black
+      colours[3][1] = rand2;  
+
   
-  int[] colours = new int[4];
-      colours[0] = #d10a0f;  //red  
-      colours[1] = #3d487e;  //blue  
-      colours[2] = #fcd202;  //yellow
-      colours[3] = #000000;  //black
-  
-  if(i<15){
+  if(i<17){
     i++;
     rects.poll().split();
-    delay(400);
-  }else if(i==15){
+    delay(250);
+  }else if(i==17){
    i++;    //remove this for seizurey fun times
-   for(int c: colours){
-    for(int j = 0; j < 2; j++){
-      fill(c);
+   for(int[] c: colours){
+    for(int j = 0; j < c[1]; j++){
+      fill(c[0]);
       int rectNum = int(random(toColour.size()));
       Rectangle chosen = toColour.get(rectNum);
+      toColour.remove(chosen);
       chosen.redraw();
       }
     } 
