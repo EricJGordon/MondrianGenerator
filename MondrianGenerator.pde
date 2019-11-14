@@ -62,7 +62,9 @@ class Rectangle implements Comparable<Rectangle>{
      
      toColour.remove(this);
        //split into two smaller rectangles
-       int direction = int(random(2));
+       //TODO: Consider replacing (width>min) condition 
+       //with one that instead considers the height/width ratio
+       int direction = int(random(2));  
        if(direction==0 && width>min){   
          float xOffset = random(buffer, width-buffer);  //split with vertical line
          Rectangle rect1 = new Rectangle(x, y, xOffset, height);
@@ -100,7 +102,7 @@ void draw(){
   if(i<17){
     i++;
     rects.poll().split();
-    delay(250);
+    delay(180);
   }else if(i==17){
    i++;    //remove this for seizurey fun times
    for(int[] c: colours){
@@ -112,12 +114,16 @@ void draw(){
       chosen.redraw();
       }
     } 
-    //TODO: make sure colours don't overwrite each other - each 'chosen' should be a number that hasn't already been picked
-    //TODO: make sure two black rects don't border each other, generally doesn't look great
-    
+    //TODO: make sure two black rects don't border each other, generally doesn't look great 
   }
-  
-
-   
-      
+}
+ 
+void keyPressed(){
+  if(key == ' ' ){
+    background(255);
+    i = 0;
+    rects.clear();  
+    rects.add(new Rectangle(0, 0, 550, 600));
+    toColour.clear();
+  }
 }
