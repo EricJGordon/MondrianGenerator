@@ -3,6 +3,7 @@ int i;
 
 PriorityQueue<Rectangle> rects = new PriorityQueue();
 ArrayList<Rectangle> toColour = new ArrayList();
+ArrayList<Rectangle> copyOfToColour = new ArrayList();
 
 void setup(){
   size(550, 600); 
@@ -105,6 +106,8 @@ void draw(){
     delay(180);
   }else if(i==17){
    i++;    //remove this for seizurey fun times
+   copyOfToColour.addAll(toColour);
+   //toColour = copyOfToColour;
    for(int[] c: colours){
     for(int j = 0; j < c[1]; j++){
       fill(c[0]);
@@ -125,5 +128,15 @@ void keyPressed(){
     rects.clear();  
     rects.add(new Rectangle(0, 0, 550, 600));
     toColour.clear();
+    copyOfToColour.clear();
+  }else if(key == 'c' ){
+    i = 17;
+    fill(255);
+    toColour.clear();
+    for(Rectangle r : copyOfToColour){
+      toColour.add(r);
+      r.redraw();
+    }
+    copyOfToColour.clear();
   }
 }
