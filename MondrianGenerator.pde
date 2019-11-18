@@ -1,9 +1,9 @@
 import java.util.*;
-int i;
+int i, maxIters;
 
 PriorityQueue<Rectangle> rects = new PriorityQueue();
 ArrayList<Rectangle> toColour = new ArrayList();
-ArrayList<Rectangle> copyOfToColour = new ArrayList();
+ArrayList<Rectangle> originalToColour = new ArrayList();
 
 void setup(){
   size(550, 600); 
@@ -11,6 +11,7 @@ void setup(){
   strokeWeight(4);
   rects.add(new Rectangle(0, 0, 550, 600));
   i = 0;
+  maxIters = 17;
 }
 
 class Rectangle implements Comparable<Rectangle>{
@@ -99,25 +100,31 @@ void draw(){
       colours[3][0] = #000000;  //black
       colours[3][1] = rand2;  
 
+  int numColours = 0;
+  ArrayList<Integer> allColours = new ArrayList<Integer>();
+  for(int i = 0; i < colours.length; i++){
+    numColours += colours[i][1];
+    for(int j = 0; j < colours[i][1]; j++){
+      allColours.add(colours[i][0]);
+    }
+  }
   
-  if(i<17){
+  if(i<maxIters){
     i++;
     rects.poll().split();
     delay(180);
-  }else if(i==17){
-   i++;    //remove this for seizurey fun times
-   copyOfToColour.addAll(toColour);
-   //toColour = copyOfToColour;
-   for(int[] c: colours){
-    for(int j = 0; j < c[1]; j++){
-      fill(c[0]);
-      int rectNum = int(random(toColour.size()));
-      Rectangle chosen = toColour.get(rectNum);
-      toColour.remove(chosen);
-      chosen.redraw();
-      }
-    } 
-    //TODO: make sure two black rects don't border each other, generally doesn't look great 
+    if(i == maxIters-1){
+     originalToColour.addAll(toColour);
+   }
+  }else if(i < maxIters + numColours){
+   fill(allColours.get(i-maxIters));
+   int rectNum = int(random(toColour.size()));
+   Rectangle chosen = toColour.get(rectNum);
+   toColour.remove(chosen);
+   chosen.redraw();
+   delay(150);
+   i++;   
+   //TODO: make sure two black rects don't border each other, generally doesn't look great 
   }
 }
  
@@ -128,15 +135,14 @@ void keyPressed(){
     rects.clear();  
     rects.add(new Rectangle(0, 0, 550, 600));
     toColour.clear();
-    copyOfToColour.clear();
-  }else if(key == 'c' ){
-    i = 17;
+    originalToColour.clear();
+  }else if(key == 'c' && i > maxIters){
+    i = maxIters;
     fill(255);
     toColour.clear();
-    for(Rectangle r : copyOfToColour){
+    for(Rectangle r : originalToColour){
       toColour.add(r);
       r.redraw();
     }
-    copyOfToColour.clear();
   }
 }
